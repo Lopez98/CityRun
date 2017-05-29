@@ -33,6 +33,7 @@ class CityRun(object):
 				elif salto == True:
 					salto = EstadoJugar().saltar()
 
+
 			for evento in pygame.event.get():
 				if evento.type == pygame.QUIT:
 					pygame.quit()

@@ -2,6 +2,7 @@ import pygame
 from logica.LogicaCamino import LogicaCamino
 from logica.LogicaJugador import LogicaJugador
 from logica.LogicaDificultad import LogicaDificultad
+from logica.LogicaObstaculo import LogicaObstaculo
 
 class Graficos(object):
 	
@@ -13,9 +14,11 @@ class Graficos(object):
 	""" Objetos """
 	LogicaCamino = LogicaCamino(0)
 	LogicaJugador = LogicaJugador(16)
+	LogicaObstaculo = LogicaObstaculo()
 
 	""" Imagenes que va a utilizar el juego"""
 	LOGO = pygame.image.load("recursos/botones/logo.png")
+	VACIO = pygame.image.load("recursos/botones/vacio.png")
 	CONFIGURAR = pygame.image.load("recursos/botones/configurar.png")
 	PAUSA = pygame.image.load("recursos/botones/pausa.png")
 
@@ -44,6 +47,7 @@ class Graficos(object):
 		self.estado = estado
 		self.sprites_Jugador = [Graficos.JUGADOR_1,Graficos.JUGADOR_2,Graficos.JUGADOR_3,Graficos.JUGADOR_4,Graficos.JUGADOR_5,Graficos.JUGADOR_6,Graficos.JUGADOR_7,Graficos.JUGADOR_8]
 		self.sprites_Billete = [Graficos.BILLETE_1,Graficos.BILLETE_2,Graficos.BILLETE_3,Graficos.BILLETE_4,Graficos.BILLETE_5,Graficos.BILLETE_4,Graficos.BILLETE_3,Graficos.BILLETE_2]
+		self.obstaculos = [(200,296)]
 	
 	def pintarLogo(self):
 		Graficos.ventana.blit(Graficos.LOGO,(192,128))
@@ -73,6 +77,17 @@ class Graficos(object):
 			Graficos.ventana.blit(self.sprites_Jugador[5], (32,salto[0]))
 			return salto[1]
 
+	
+	def setObstaculo(self):
+		self.obstaculos = Graficos.LogicaObstaculo.crearObstaculo(self.obstaculos)
+		print(len(self.obstaculos))
+
 	def pintarObstaculo(self):
-		Graficos.ventana.blit(Graficos.CONO, (200,296))
-		Graficos.ventana.blit(Graficos.BARRERA, (400,273))		
+		self.setObstaculo()
+
+		for element in self.obstaculos:
+			Graficos.ventana.blit(Graficos.CONO,element)
+
+		self.obstaculos = Graficos.LogicaObstaculo.moverObstaculo(self.obstaculos)
+
+		

@@ -9,11 +9,10 @@ class EstadoJugar(object):
 	def __init__(self):
 		Graficos.pintarFondo()
 		Graficos.pintarCamino()
-		Graficos.pintarObstaculo()
+		Graficos.pintarObstaculo()	
 
 	def correr(self):
 		Graficos.pintarPersonaje(False)
 
 	def saltar(self):
-		return Graficos.pintarPersonaje(True)		
-		
+		return Graficos.pintarPersonaje(True)
