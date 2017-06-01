@@ -47,7 +47,7 @@ class Graficos(object):
 		self.estado = estado
 		self.sprites_Jugador = [Graficos.JUGADOR_1,Graficos.JUGADOR_2,Graficos.JUGADOR_3,Graficos.JUGADOR_4,Graficos.JUGADOR_5,Graficos.JUGADOR_6,Graficos.JUGADOR_7,Graficos.JUGADOR_8]
 		self.sprites_Billete = [Graficos.BILLETE_1,Graficos.BILLETE_2,Graficos.BILLETE_3,Graficos.BILLETE_4,Graficos.BILLETE_5,Graficos.BILLETE_4,Graficos.BILLETE_3,Graficos.BILLETE_2]
-		self.obstaculos = [(200,296)]
+		self.obstaculos = [(640,296)]
 	
 	def pintarLogo(self):
 		Graficos.ventana.blit(Graficos.LOGO,(192,128))
@@ -79,15 +79,18 @@ class Graficos(object):
 
 	
 	def setObstaculo(self):
+		""" Llama al metodo de la clase LogicaObstaculo y crear una tupla con la posicion en 'x' y 'y' y se agrega a una lista con todas las posiciones de cada obstaculo"""
 		self.obstaculos = Graficos.LogicaObstaculo.crearObstaculo(self.obstaculos)
-		print(len(self.obstaculos))
 
 	def pintarObstaculo(self):
 		self.setObstaculo()
 
+		"""Este ciclo se encarga de recorrer la lista e imprimir el obstaculo"""
 		for element in self.obstaculos:
 			Graficos.ventana.blit(Graficos.CONO,element)
 
+		"""Se modifica la lista restandole a la posicion en 'x' de cada tupla y hace que el obstaculo se mueva"""
 		self.obstaculos = Graficos.LogicaObstaculo.moverObstaculo(self.obstaculos)
 
-		
+		"""Se encarga de eliminar los obtaculos cuya posicion en 'x' se pasa del limite"""
+		self.obstaculos = Graficos.LogicaObstaculo.borrarObstaculo(self.obstaculos)		
