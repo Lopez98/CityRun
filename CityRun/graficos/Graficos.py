@@ -3,6 +3,8 @@ from logica.LogicaCamino import LogicaCamino
 from logica.LogicaJugador import LogicaJugador
 from logica.LogicaDificultad import LogicaDificultad
 from logica.LogicaObstaculo import LogicaObstaculo
+from logica.LogicaBillete import LogicaBillete
+from logica.LogicaPuntaje import LogicaPuntaje
 
 class Graficos(object):
 	
@@ -15,6 +17,12 @@ class Graficos(object):
 	LogicaCamino = LogicaCamino(0)
 	LogicaJugador = LogicaJugador(16)
 	LogicaObstaculo = LogicaObstaculo()
+	LogicaBillete = LogicaBillete()
+	LogicaPuntaje = LogicaPuntaje()
+
+	"""Fuentes"""
+	FUENTE = pygame.font.Font("recursos/fuentes/orange_juice.ttf",40)
+	FUENTE2 = pygame.font.Font("recursos/fuentes/Jelly_Crazies.ttf",15)
 
 	""" Imagenes que va a utilizar el juego"""
 	LOGO = pygame.image.load("recursos/botones/logo.png")
@@ -48,6 +56,8 @@ class Graficos(object):
 		self.sprites_Jugador = [Graficos.JUGADOR_1,Graficos.JUGADOR_2,Graficos.JUGADOR_3,Graficos.JUGADOR_4,Graficos.JUGADOR_5,Graficos.JUGADOR_6,Graficos.JUGADOR_7,Graficos.JUGADOR_8]
 		self.sprites_Billete = [Graficos.BILLETE_1,Graficos.BILLETE_2,Graficos.BILLETE_3,Graficos.BILLETE_4,Graficos.BILLETE_5,Graficos.BILLETE_4,Graficos.BILLETE_3,Graficos.BILLETE_2]
 		self.obstaculos = [(640,296)]
+		self.billetes = [(650,140)]
+		self.puntaje = 0
 	
 	def pintarLogo(self):
 		Graficos.ventana.blit(Graficos.LOGO,(192,128))
@@ -68,6 +78,11 @@ class Graficos(object):
 			Graficos.ventana.blit(Graficos.CAMINO,(posX[0],128))
 			Graficos.ventana.blit(Graficos.CAMINO,(posX[1],128))
 
+	def pintarPuntaje(self):
+		self.puntaje = Graficos.LogicaPuntaje.getPuntaje(True)
+		score = Graficos.FUENTE2.render(str(self.puntaje), True, (255,255,255))
+		Graficos.ventana.blit(score,(10,10))
+
 	def pintarPersonaje(self, saltar):
 		if saltar == False:
 			sprite = Graficos.LogicaJugador.getSprite()
@@ -77,13 +92,9 @@ class Graficos(object):
 			Graficos.ventana.blit(self.sprites_Jugador[5], (32,salto[0]))
 			return salto[1]
 
-	
-	def setObstaculo(self):
+	def pintarObstaculo(self):
 		""" Llama al metodo de la clase LogicaObstaculo y crear una tupla con la posicion en 'x' y 'y' y se agrega a una lista con todas las posiciones de cada obstaculo"""
 		self.obstaculos = Graficos.LogicaObstaculo.crearObstaculo(self.obstaculos)
-
-	def pintarObstaculo(self):
-		self.setObstaculo()
 
 		"""Este ciclo se encarga de recorrer la lista e imprimir el obstaculo"""
 		for element in self.obstaculos:
@@ -93,4 +104,17 @@ class Graficos(object):
 		self.obstaculos = Graficos.LogicaObstaculo.moverObstaculo(self.obstaculos)
 
 		"""Se encarga de eliminar los obtaculos cuya posicion en 'x' se pasa del limite"""
-		self.obstaculos = Graficos.LogicaObstaculo.borrarObstaculo(self.obstaculos)		
+		self.obstaculos = Graficos.LogicaObstaculo.borrarObstaculo(self.obstaculos)
+
+
+	def pintarBillete(self):
+		sprite = Graficos.LogicaBillete.getSprite()
+
+		self.billetes = Graficos.LogicaBillete.crearBillete(self.billetes)
+
+		for element in self.billetes:
+			Graficos.ventana.blit(self.sprites_Billete[sprite],element)
+
+		self.billetes = Graficos.LogicaBillete.moverBillete(self.billetes)
+
+		self.billetes = Graficos.LogicaBillete.borrarBillete(self.billetes)
