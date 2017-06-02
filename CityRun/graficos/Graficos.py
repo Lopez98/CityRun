@@ -23,12 +23,18 @@ class Graficos(object):
 	"""Fuentes"""
 	FUENTE = pygame.font.Font("recursos/fuentes/orange_juice.ttf",40)
 	FUENTE2 = pygame.font.Font("recursos/fuentes/Jelly_Crazies.ttf",15)
+	FUENTE3 = pygame.font.Font("recursos/fuentes/Jelly_Crazies.ttf",30)
+
+	PERDISTE = FUENTE3.render('PERDISTE', True, (200,100,100))
+	PUNTAJE = FUENTE2.render('PUNTAJE', True, (250,250,250))
+	PUNTAJEMAX = FUENTE2.render('TU RECORD', True, (250,250,250))
 
 	""" Imagenes que va a utilizar el juego"""
 	LOGO = pygame.image.load("recursos/botones/logo.png")
 	VACIO = pygame.image.load("recursos/botones/vacio.png")
 	CONFIGURAR = pygame.image.load("recursos/botones/configurar.png")
 	PAUSA = pygame.image.load("recursos/botones/pausa.png")
+	TRANSPARENTE = pygame.image.load("recursos/fondo/gris.png")
 
 	JUGADOR_1 = pygame.image.load("recursos/personaje/1.png")
 	JUGADOR_2 = pygame.image.load("recursos/personaje/2.png")
@@ -55,14 +61,36 @@ class Graficos(object):
 		self.estado = estado
 		self.sprites_Jugador = [Graficos.JUGADOR_1,Graficos.JUGADOR_2,Graficos.JUGADOR_3,Graficos.JUGADOR_4,Graficos.JUGADOR_5,Graficos.JUGADOR_6,Graficos.JUGADOR_7,Graficos.JUGADOR_8]
 		self.sprites_Billete = [Graficos.BILLETE_1,Graficos.BILLETE_2,Graficos.BILLETE_3,Graficos.BILLETE_4,Graficos.BILLETE_5,Graficos.BILLETE_4,Graficos.BILLETE_3,Graficos.BILLETE_2]
+		self.sprites_Logo = [Graficos.LOGO, Graficos.VACIO]
 		self.obstaculos = [(640,296)]
 		self.billetes = [(650,140)]
 		self.puntaje = 0
+		self.maxpuntaje = 0
+		self.spr = 0
+		self.sprvel = 30
+		self.colisionObstaculo = False
+		self.colisionBillete = False
 	
-	def pintarLogo(self):
-		Graficos.ventana.blit(Graficos.LOGO,(192,128))
+	def pintarLogo(self, click):
+		if click:
+			sprite = self.sprite()
+			Graficos.ventana.blit(self.sprites_Logo[sprite],(192,128))	
+		else:
+			Graficos.ventana.blit(self.sprites_Logo[0],(192,128))
+		
 		Graficos.ventana.blit(Graficos.CONFIGURAR,(600,8))
 
+	def sprite(self):
+		if self.sprvel == 0:
+			if self.spr == 0:
+				self.spr += 1
+			elif self.spr == 1:
+				self.spr = 0
+			self.sprvel = 30
+		else:
+			self.sprvel -= 1
+
+		return self.spr
 
 	def pintarFondo(self):
 		Graficos.ventana.blit(Graficos.FONDO,(0,-100))
@@ -78,8 +106,11 @@ class Graficos(object):
 			Graficos.ventana.blit(Graficos.CAMINO,(posX[0],128))
 			Graficos.ventana.blit(Graficos.CAMINO,(posX[1],128))
 
+		elif self.estado == 3:
+			Graficos.ventana.blit(Graficos.CAMINO,(0,128))
+
 	def pintarPuntaje(self):
-		self.puntaje = Graficos.LogicaPuntaje.getPuntaje(True)
+		self.puntaje, self.maxpuntaje = Graficos.LogicaPuntaje.getPuntaje(self.colisionObstaculo)
 		score = Graficos.FUENTE2.render(str(self.puntaje), True, (255,255,255))
 		Graficos.ventana.blit(score,(10,10))
 
@@ -118,3 +149,27 @@ class Graficos(object):
 		self.billetes = Graficos.LogicaBillete.moverBillete(self.billetes)
 
 		self.billetes = Graficos.LogicaBillete.borrarBillete(self.billetes)
+
+	def colisiones(self):
+		self.colisionObstaculo = Graficos.LogicaJugador.colisionObstaculo(self.obstaculos)
+
+		if self.colisionObstaculo:
+			return True
+		else:
+			return False
+
+	def pintarFiltro(self):
+		Graficos.ventana.blit(Graficos.TRANSPARENTE,(0,0))
+
+	def pintarPerdiste(self):
+		Graficos.ventana.blit(Graficos.PERDISTE,(150,80))
+
+	def puntajeFinal(self):
+		score = Graficos.FUENTE3.render(str(self.puntaje), True, (255,255,255))
+		scoremax = Graficos.FUENTE3.render(str(self.maxpuntaje), True, (255,255,255))
+
+		Graficos.ventana.blit(Graficos.PUNTAJE,(240,160))
+		Graficos.ventana.blit(score,(295,190))
+		Graficos.ventana.blit(Graficos.PUNTAJEMAX,(220,280))
+		Graficos.ventana.blit(scoremax,(295,310))
+

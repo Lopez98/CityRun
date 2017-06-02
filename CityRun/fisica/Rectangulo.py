@@ -2,8 +2,9 @@ class Rectangulo(object):
 
 	"""Figura rectangular"""
 
-	def __init__(self, punto, ancho, alto):
-		self.rectangulo = (punto[0], punto[1], ancho, alto)
+	def __init__(self):
+		pass
 
-	def getRect(self):
-		return self.rectangulo
+	def getRect(self, punto, ancho, alto):
+		rectangulo = (punto[0], punto[1], ancho, alto)
+		return rectangulo

@@ -1,7 +1,14 @@
+from fisica.Colisiones import Colisiones
+from fisica.Rectangulo import Rectangulo
+from logica.LogicaObstaculo import LogicaObstaculo
 
 class LogicaJugador(object):
 
 	"""Esta clase se encarga de controlar la animacion del personaje cuando realiza una de las acciones posibles"""
+
+	Colisiones = Colisiones()
+	Rectangulo = Rectangulo()
+	LogicaObstaculo = LogicaObstaculo()
 
 	def __init__(self, velocidad):
 		self.sprite = 0
@@ -10,6 +17,9 @@ class LogicaJugador(object):
 		self.posY = 200
 		self.accion = True
 		self.salto = True
+
+		self.rectangulo = []
+		self.listaRect = []
 
 	def getSprite(self):
 
@@ -44,3 +54,14 @@ class LogicaJugador(object):
 				self.salto = False
 
 		return self.posY,self.salto
+
+	def colisionObstaculo(self, lista):
+		self.rectangulo = LogicaJugador.Rectangulo.getRect((40,self.posY),90,120)
+
+		for element in lista:
+			rect2 = LogicaJugador.Rectangulo.getRect((element[0],element[1]),18,24)
+			colision = LogicaJugador.Colisiones.getColision(self.rectangulo,rect2)
+
+			return colision
+
+		

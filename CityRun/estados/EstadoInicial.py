@@ -6,7 +6,7 @@ class EstadoInicial(object):
 
 	""" Este es el primer estado del juego. Muestra la pantalla de bienvenida"""
 
-	def __init__(self):
+	def __init__(self, click):
 		Graficos.pintarFondo()
 		Graficos.pintarCamino()
-		Graficos.pintarLogo()
+		Graficos.pintarLogo(click)

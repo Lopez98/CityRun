@@ -1,6 +1,7 @@
 import pygame
 from estados.EstadoInicial import EstadoInicial
 from estados.EstadoJugar import EstadoJugar
+from estados.EstadoPerder import EstadoPerder
 
 class CityRun(object):
 	
@@ -17,6 +18,7 @@ class CityRun(object):
 		estado = 1
 		salto = False
 		clock = pygame.time.Clock()
+		click = False
 
 		while True:
 
@@ -24,14 +26,21 @@ class CityRun(object):
 
 			clock.tick(240)
 
+			mouse = pygame.mouse.get_pos()
+
 			if estado == 1:
-				EstadoInicial()
+				EstadoInicial(click)
 
 			elif estado == 2:
 				if salto == False:
-					EstadoJugar().correr()
+					if EstadoJugar().correr():
+						estado = 3
+					
 				elif salto == True:
-					salto = EstadoJugar().saltar()
+					salto = EstadoJugar().saltar()[0]
+
+			elif estado == 3:
+				EstadoPerder()
 
 
 			for evento in pygame.event.get():
@@ -39,12 +48,20 @@ class CityRun(object):
 					pygame.quit()
 
 				if estado == 1:
-					if evento.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()==(1,0,0):
-						estado = 2
+					if mouse[0]>192 and mouse[0]<448 and mouse[1]>128 and mouse[1]<256:
+						click = True
+						if evento.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()==(1,0,0):
+							estado = 2
+					else:
+						click = False
 
 				elif estado == 2:
 					if evento.type == pygame.KEYDOWN:
 						if evento.key == pygame.K_UP:
 							salto = True
+
+				elif estado == 3:
+					if evento.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()==(1,0,0):
+						estado = 2
 
 			pygame.display.update()
